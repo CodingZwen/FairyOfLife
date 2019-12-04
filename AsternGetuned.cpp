@@ -15,7 +15,7 @@ int AsternGetuned::heuristic(sNode * a, sNode * b)
 
 void AsternGetuned::solveWithThread()
 {
-	
+	//todo
 }
 
 void AsternGetuned::setNodeObstacle(int x, int y)
@@ -198,12 +198,7 @@ bool AsternGetuned::solve()
 			{
 				nodeNeighbour->parent = nodeCurrent;
 				nodeNeighbour->fLocalGoal = fPossiblyLowerGoal;
-
-				// The best path length to the neighbour being tested has changed, so
-				// update the neighbour's score. The heuristic is used to globally bias
-				// the path algorithm, so it knows if its getting better or worse. At some
-				// point the algo will realise this path is worse and abandon it, and then go
-				// and search along the next best path.
+				
 				nodeNeighbour->fGlobalGoal = nodeNeighbour->fLocalGoal + heuristic(nodeNeighbour, nodeZiel);
 			}
 		}
@@ -234,7 +229,7 @@ std::vector<sf::Vector2i> AsternGetuned::solveWithVector()
 		//wenn openlist nicht leer und und billigstens bereits besucht dann objekt rausmachen
 		while (!vecNotTestedNodes.empty() && vecNotTestedNodes.front()->bVisited)
 		{
-			//printf("am löchen\n");
+			//printf("am lÃ¶chen\n");
 			vecNotTestedNodes.erase(vecNotTestedNodes.begin());
 		}
 
@@ -288,7 +283,7 @@ std::vector<sf::Vector2i> AsternGetuned::solveWithVector()
 			{
 				//printf("zielvorhanden x: %d | y: %d\n", nodeZiel->x, nodeZiel->y);;
 
-				//nächster punkt von startpunkt
+				//nÃ¤chster punkt von startpunkt
 				//in while wird sich dann richtung ziel gehangelt
 				sNode *p = nodeZiel;
 				//l.push_front(sf::Vector2i(p->x*32 , p->y*32 ));
@@ -464,7 +459,7 @@ std::vector<sf::Vector2i> AsternGetuned::feedEnemyWithWaypointsVector()
 	{
 		//printf("zielvorhanden x: %d | y: %d\n", nodeZiel->x, nodeZiel->y);;
 		
-		//nächster punkt von startpunkt
+		//nÃ¤chster punkt von startpunkt
 		//in while wird sich dann richtung ziel gehangelt
 		sNode *p = nodeZiel;
 		l.push_back(sf::Vector2i(p->x*32, p->y*32));
@@ -497,7 +492,7 @@ std::list<sf::Vector2i> AsternGetuned::feedEnemyWithWaypointsList()
 	{
 		//printf("zielvorhanden x: %d | y: %d\n", nodeZiel->x, nodeZiel->y);;
 
-		//nächster punkt von startpunkt
+		//nÃ¤chster punkt von startpunkt
 		//in while wird sich dann richtung ziel gehangelt
 		sNode *p = nodeZiel;
 		//l.push_front(sf::Vector2i(p->x*32 , p->y*32 ));
