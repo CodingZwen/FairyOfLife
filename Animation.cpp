@@ -78,7 +78,15 @@ void Animation::update(sf::Time _elapsed, sf::Vector2f position)
 	elapsed += _elapsed;
 	sprite.setTextureRect(sf::IntRect(column*width, currentrow*height, width, height));
 	sprite.setPosition(position);
+	
+}
 
+void Animation::set_animcolumn(int _column)
+{
+	this->column = _column;
+	
+
+	
 }
 
 void Animation::draw(sf::RenderWindow & window)

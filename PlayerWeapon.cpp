@@ -12,6 +12,7 @@ PlayerWeapon::PlayerWeapon(const sf::Texture *texture)
 	anim.init(texture,0, 0, 32, 32);
 	collRect.height = 40;
 	collRect.width = 40;
+	
 
 }
 
@@ -93,6 +94,7 @@ void PlayerWeapon::change_weapon(int id)
 	if (id > 9)return;
 
 	anim.set_animcolumn(id);
+
 
 
 }

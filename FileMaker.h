@@ -57,9 +57,20 @@ public:
 	~FileMaker();
 
 	//Erstellfunktionen
+	//adds name to a png binary (vec<char>) and returns it as string
 	std::string addFileNameToBinaryVec(std::vector<char> &v, string picName, unsigned int spaces = 30);
 	std::vector<unsigned char> CreateBinaryVecReadyToPrint(vector<string> &v);
 	void createBinaryFile(std::vector<unsigned char> &bytesForFile, string outputfilename);
+
+	//create savefile
+	std::vector<unsigned char> CreateBinarySavefileVecReadyToPrint(unsigned int itemcount,
+		unsigned int playerlevel,unsigned int money,unsigned int posx,unsigned posy,unsigned int xp,
+		std::string itemstring,std::vector<std::vector<float>> &items);
+
+
+	//read savefile print
+	void printSaveFile(std::vector<unsigned char> &binarysavefile);
+
 	
 	//Readfunktion
 	std::vector<unsigned char> getBytesFromFile(std::string path, bool print = false);
@@ -71,6 +82,8 @@ public:
 	//helpfunctions
 	std::string getNamefromCuttedVector(string &name);
 	std::string cutVector(vector<unsigned char> &vecToCut, int cutCount = 30);
+	
+	
 
 	
 	void ReadTextFileManual();

@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include "AssetManager.h"
 #include "LvHandler.h"
 #include "Gamestate.h"
@@ -23,6 +22,8 @@
 #include "SoundHandler.h"
 
 #include "BENCHMARK.h"
+
+#include "FileMaker.h"
 
 class Main_Game : public Gamestate
 {
@@ -53,7 +54,8 @@ public:
 	int choosenspell = 0;
 	bool activatecollision = false;
 
-	
+	template<class T>
+	T getBytesAs(std::vector<unsigned char> bytes);
 
 
 private: 
@@ -112,3 +114,28 @@ iter != end;
 (*iter)->print();
 }
 */
+
+template<class T>
+inline T Main_Game::getBytesAs(std::vector<unsigned char> bytes)
+{
+
+	unsigned char code[4];
+	T foo;
+	code[0] = bytes.at(0);
+	code[1] = bytes.at(1);
+	code[2] = bytes.at(2);
+	code[3] = bytes.at(3);
+
+	//11111111 00000000 0000000 0000000
+	
+	foo = (T)code[0] << 24;
+	//00000000 11111111 0000000 0000000
+	foo |= (T)code[1] << 16;
+	//00000000 00000000 1111111 0000000
+	foo |= (T)code[2] << 8;
+	//00000000 00000000 0000000 1111111
+	foo |= (T)code[3];
+
+
+	return foo;
+}

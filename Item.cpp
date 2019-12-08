@@ -1,113 +1,340 @@
 #include "Item.h"
 
 
-namespace SVEN
-{
+//wenn inventar voll ist fliegen items nach china 
+	
+//id ist letzendlich nur das bild
+	Item::Item(unsigned int ID, int atk, int def,
+		int speed, int iq, Rarity rarity,
+		sf::Vector2f spawnPos, sf::Sprite &spr, sf::Font *font)
+	{
+		if (ID >= 70) {
+			printf("kein item erstellt\n");
+			return;
+
+		}
+
+		sf::Vector2f Pos = spawnPos;
+		itemSprite = spr;
+		setPosition(spawnPos);
 
 
+		rect.setSize(sf::Vector2f(50, 50));
+		//rect.setFillColor(sf::Color(33, 33, 33, 200));
+		//rect.setFillColor(sf::Color(72, 66, 245, 200));
+		rect.setFillColor(sf::Color(10, 14, 46, 200));
+		rect.setOutlineThickness(3.f);
+		rect.setOutlineColor(sf::Color(200, 200, 200, 250));
+
+		this->textBackground.setSize(sf::Vector2f(32, 32));
+		this->textBackground.setFillColor(sf::Color(50, 50, 50, 170));
+		this->textBackground.setPosition(sf::Vector2f(Pos));
+
+
+		this->itemDescription.setFont(*font);
+		this->itemDescription.setPosition(sf::Vector2f(Pos.x + 32, Pos.y+32));
+		this->itemDescription.setCharacterSize(11);
+		this->itemDescription.setFillColor(sf::Color::White);
+		this->itemDescription.setOutlineThickness(1.2);
+		this->itemDescription.setOutlineColor(sf::Color::Black);
+		
+		this->itemName.setFont(*font);
+		this->itemName.setPosition(sf::Vector2f(Pos.x + 32, Pos.y));
+		this->itemName.setCharacterSize(14);
+		this->itemName.setOutlineThickness(1.2);
+		this->itemName.setOutlineColor(sf::Color::Black);
 	
 
-	Item::Item(unsigned int ID, short atk, short def, short speed, short iq, 
-		sf::Vector2f spawnPos, sf::Sprite * spr, sf::Font *font)
-	{
-		//if (ID >= 70) {
-		//	printf("kein item erstellt\n");
-		//	return;
-
-		//}
-
-		//sf::Vector2f Pos = spawnPos;
-		//itemSprite = spr;
-
-		//this->textBackground.setSize(sf::Vector2f(32, 32));
-		//this->textBackground.setFillColor(sf::Color(50, 50, 50, 170));
-		//this->textBackground.setPosition(sf::Vector2f(Pos));
-
-
-		//this->itemDescription.setFont(*font);
-		//this->itemDescription.setPosition(sf::Vector2f(Pos.x + 32, Pos.y));
-		//this->itemDescription.setCharacterSize(11);
-		//this->itemDescription.setFillColor(sf::Color::White);
-
-		//this->itemName.setFont(*font);
-		//this->itemName.setPosition(sf::Vector2f(Pos.x + 32, Pos.y+32));
-		//this->itemName.setCharacterSize(14);
-		//this->itemDescription.setFillColor(sf::Color::Green);
-
-
-		//this->itemSprite->setPosition(sf::Vector2f(Pos));
-		//item.velocity = sf::Vector2f(0, 0);
+		itemSprite.setPosition(sf::Vector2f(Pos));
+		velocity = sf::Vector2f(0, 0);
 
 
 
-		////itemsnur wird in enemy handler gesetzt und kann 
-		////0-69 sein, dementsprechend brauch ich hier tv tu
-		////damit daraus in item wird (texturerect weapon sheet)
-		//int tilecount = itemnr;
-		//item.id = itemnr;
-		//int tv, tu;
+		//itemsnur wird in enemy handler gesetzt und kann 
+		//0-69 sein, dementsprechend brauch ich hier tv tu
+		//damit daraus in item wird (texturerect weapon sheet)
+		int tilecount = ID;
+		id = ID;
+		int tv, tu;
 
-		//tu = (tilecount % (320 / 32));
-		//tv = (tilecount / (320 / 32));
-		//printf("\ndas war tv: %d und das war tu: %d\n", tu, tv);
+		tu = (tilecount % (320 / 32));
+		tv = (tilecount / (320 / 32));
+		printf("\ndas war tv: %d und das war tu: %d\n", tu, tv);
 
-		//intrect = sf::IntRect(tu * 32, tv * 32, 32, 32);
-		//item.irect = intrect;
-		//item.sprite = s_itemsprite;
-		//item.sprite.setTextureRect(intrect);
-
-		//item.text.setFont(font);
-		//item.description.setFont(font);
-
-		//int randomFaktor = 0;
-		//switch (Rarity)
-		//{
-		//case 0: break;
-		//case 1: randomFaktor = 50; break;
-		//case 2: randomFaktor = 99; break;
-		//}
-
-		//int random = rand() % 150 + randomFaktor;
-		//item.dmg = random;
-
-		//if (random > 50 && random <= 99) { item.text.setFillColor(sf::Color::Blue); }
-		//else if (random > 100) { item.text.setFillColor(sf::Color(210, 1, 255)); }
+		itemSprite.setTextureRect(sf::IntRect(tu * 32, tv * 32, 32, 32));
+		
+		
+		stats.atk = atk;
+		stats.def = def;
+		stats.speed = speed;
+		stats.iq = iq;
+		stats.krit = 1.0f;
 
 
-		//item.description.setOutlineThickness(1.2);
-		//item.description.setOutlineColor(sf::Color::Black);
+		if (atk > 50 && atk <= 99) { itemName.setFillColor(sf::Color::Blue); }
+		else if (atk > 100) { itemName.setFillColor(sf::Color(210, 1, 255)); }
+		else if (atk <= 50) { itemName.setFillColor(sf::Color(30, 255, 0)); }
 
-		//item.text.setOutlineThickness(1.2);
-		//item.text.setOutlineColor(sf::Color::Black);
-
-		//item.krit = 1.0f;
-		//item.def = rand() % 150;
-		//item.speed = rand() % 150;
-		//item.iq = rand() % 150;
-
-		////hier noch eine speziell funktion die den string formatier für die anzeige
-		//if (itemnr <= 9) { item.type = Equip_Type::Sword; item.text.setString("Schwert"); item.description.setString(get_description_string("Schwert des Grauens", item.dmg, item.def, item.speed, item.iq)); }
-		//else if (itemnr > 9 && itemnr <= 19) { item.type = Equip_Type::Shield; item.text.setString("Nebenhand"); item.description.setString(get_description_string("Schild der Verfluchten", item.dmg, item.def, item.speed, item.iq)); }
-		//else if (itemnr > 19 && itemnr <= 29) { item.type = Equip_Type::Amulet; item.text.setString("Schmuck"); item.description.setString(get_description_string("Amulet des Kaisers", item.dmg, item.def, item.speed, item.iq)); }
-		//else if (itemnr > 29 && itemnr <= 39) { item.type = Equip_Type::Ring; item.text.setString("Finger"); item.description.setString(get_description_string("Ring der Schatten", item.dmg, item.def, item.speed, item.iq)); }
-		//else if (itemnr > 39 && itemnr <= 49) { item.type = Equip_Type::Head; item.text.setString("Kopfbedeckung"); item.description.setString(get_description_string("Stahlhelm", item.dmg, item.def, item.speed, item.iq)); }
-		//else if (itemnr > 49 && itemnr <= 59) { item.type = Equip_Type::Chest; item.text.setString("Brust"); item.description.setString(get_description_string("Magierkutte", item.dmg, item.def, item.speed, item.iq)); }
-		//else if (itemnr > 59 && itemnr <= 69) { item.type = Equip_Type::Boots; item.text.setString("Füße"); item.description.setString(get_description_string("Stiefel des Hasen", item.dmg, item.def, item.speed, item.iq)); }
-		//else { printf("achtung nichts erstellt!!!!!\n"); }
+		//hier noch eine speziell funktion die den string formatier für die anzeige
+		if (id <= 9) { type = EquipType::Sword; itemName.setString("Erwachte Klinge"); itemDescription.setString(get_description_string("Schwert", stats.atk, stats.def, stats.speed, stats.iq)); }
+		else if (id > 9 && id <= 19) { type = EquipType::Shield; itemName.setString("Helden Schild"); itemDescription.setString(get_description_string("Nebenhand", stats.atk, stats.def, stats.speed, stats.iq)); }
+		else if (id > 19 && id <= 29) { type = EquipType::Amulet; itemName.setString("Kaiseramulett"); itemDescription.setString(get_description_string("Schmuck", stats.atk, stats.def, stats.speed, stats.iq)); }
+		else if (id > 29 && id <= 39) { type = EquipType::Ring1; itemName.setString("Ring der Schatten"); itemDescription.setString(get_description_string("Finger", stats.atk, stats.def, stats.speed, stats.iq)); }
+		else if (id > 39 && id <= 49) { type = EquipType::Head; itemName.setString("Stahlhelm"); itemDescription.setString(get_description_string("Kopf", stats.atk, stats.def, stats.speed, stats.iq)); }
+		else if (id > 49 && id <= 59) { type = EquipType::Chest; itemName.setString("Magierkutte"); itemDescription.setString(get_description_string("Brust", stats.atk, stats.def, stats.speed, stats.iq)); }
+		else if (id > 59 && id <= 69) { type = EquipType::Boots; itemName.setString("Hasenstiefel"); itemDescription.setString(get_description_string("Füße", stats.atk, stats.def, stats.speed, stats.iq)); }
+		else { printf("achtung nichts erstellt!!!!!\n"); }
 
 
 
-		//_vitems.push_back(item);
+		
+
+
+
 	}
+
+
+
+	Item::Item()
+	{
+	}
+
 
 	Item::~Item()
 	{
 	}
 
+	void Item::update(sf::Time elapsed, sf::Vector2f target, sf::Vector2i mousepos)
+	{
+
+		if (havetarget)
+		{
+			velocity = getVelocityToTarget(target, elapsed);
+
+			if (itemSprite.getGlobalBounds().contains(target))
+			{
+				destroy();
+			}
+
+			
+		}
+
+
+
+
+		if (itemSprite.getGlobalBounds().contains(sf::Vector2f(mousepos)))
+		{
+			descriptionON();
+
+		}
+		else {
+			descriptionOFF();
+
+		}
+
+	rect.move(velocity);
+	itemSprite.move(velocity);
+	itemName.move(velocity);
+	itemDescription.move(velocity);
+
+
+	}
+
 	void Item::draw(sf::RenderTarget & target)
 	{
-		target.draw(*itemSprite);
+
+		//das trennen in funktionen um einzeln im inventar items anzuzeigen
+		if (showdescription)
+		{
+			
+			target.draw(rect);
+			target.draw(itemName);
+			target.draw(itemDescription);
+		}
+		target.draw(itemSprite);
+	}
+
+	Item & Item::operator=(const Item left)
+	{
+		stats = left.stats;
+
+		return *this;
 	}
 
 
-}
+
+
+
+
+	void Item::drawDescription(sf::RenderTarget & target)
+	{
+		if (showdescription)
+		{
+
+			target.draw(rect);
+			target.draw(itemName);
+			target.draw(itemDescription);
+		}
+	}
+
+	void Item::drawOnlySprite(sf::RenderTarget & target)
+	{
+		target.draw(itemSprite);
+	}
+
+	std::string Item::get_description_string(std::string art, int atk, int def, int speed, int _iq)
+	{
+
+
+		std::string buffer = art;
+		buffer += ":\nAtk:   ";
+		buffer += std::to_string(atk);
+
+
+		buffer += "\tInt:\t";
+		buffer += std::to_string(_iq);
+		buffer += "\nDef:   ";
+		buffer += std::to_string(def);
+
+		buffer += "\tSpd:   ";
+		buffer += std::to_string(speed);
+
+
+		return buffer;
+
+
+
+	}
+
+	sf::Vector2f Item::getVelocityToTarget(const sf::Vector2f & targetPos, sf::Time & elapsed)
+	{
+
+		sf::Vector2f itempos = rect.getPosition();
+		sf::Vector2f velocity;
+		sf::Vector2f dir;
+
+
+		dir.x = (targetPos.x - itempos.x);
+		dir.y = (targetPos.y - itempos.y);
+
+		float factor = sqrt(128/((dir.x*dir.x) + (dir.y*dir.y)));
+
+		velocity.x = dir.x*factor;
+		velocity.y = dir.y*factor;
+
+		return velocity;
+	}
+
+	bool Item::sprIsHovered(sf::Vector2i const mousepos)
+	{
+		
+		if (itemSprite.getGlobalBounds().contains(sf::Vector2f(mousepos)))
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+	bool Item::descriptrectIsHovered(sf::Vector2i const mousepos)
+	{
+		
+		if (rect.getGlobalBounds().contains(sf::Vector2f(mousepos)))
+		{
+
+
+			return true;
+		}
+		return false;
+
+
+	}
+
+	void Item::setPosition(sf::Vector2f pos)
+	{
+		rect.setPosition(pos);
+		itemSprite.setPosition(pos);
+		itemName.setPosition(sf::Vector2f(pos.x+textboxoffset,pos.y));
+		itemDescription.setPosition(sf::Vector2f(pos.x + textboxoffset, pos.y+32));
+	}
+
+	sf::Sprite & Item::getSprite()
+	{
+		return itemSprite;
+	}
+
+	Stats & Item::getStats()
+	{
+		return stats;
+	}
+
+	void Item::turnofftarget()
+	{
+		 havetarget = false;
+		 velocity = sf::Vector2f(0,0);
+	}
+
+	void Item::descriptionON()
+	{
+		rect.setSize(sf::Vector2f(210, 80));
+		showdescription = true;
+	}
+
+	void Item::descriptionOFF()
+	{
+		rect.setSize(sf::Vector2f(50, 50));
+		showdescription = false;
+	}
+
+	std::string Item::getItemasString()
+	{
+
+		std::stringstream ss;
+
+		ss << static_cast<unsigned int>(id);
+		ss << static_cast<unsigned int>(stats.atk);
+		ss << static_cast<unsigned int>(stats.def);
+		ss << static_cast<unsigned int>(stats.speed);
+		ss << static_cast<unsigned int>(stats.iq);
+		ss << static_cast<float>(stats.krit);
+
+
+
+		return ss.str();
+	}
+
+	std::vector<float> Item::getItemStats()
+	{
+
+		std::vector<float> vstats;
+
+		vstats.push_back(static_cast<float>(id));
+		vstats.push_back(static_cast<float>(stats.atk));
+		vstats.push_back(static_cast<float>(stats.def));
+		vstats.push_back(static_cast<float>(stats.speed));
+		vstats.push_back(static_cast<float>(stats.iq));
+		vstats.push_back(static_cast<float>(stats.krit));
+
+
+		return vstats;
+	}
+
+	/*
+	savefile
+	int itemcount
+
+	int playerlevel
+	int money
+	int posx;
+	int posy;
+	int currentxp;
+	
+	id 4bytes und ein float
+	atk
+	def
+	speed
+	iq
+	krit
+	bool equipped
+	
+	*/

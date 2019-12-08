@@ -50,6 +50,12 @@ void Player::initAnimations(const sf::Texture *texture)
 	animatedSprite.insertAnimation(sf::IntRect(0, 48 * 8, spritex, spritey), 5,* texture, "STANDING_AFK");
 	animatedSprite.insertAnimation(sf::IntRect(0, 48 * 9, spritex, spritey), 5, *texture, "DEATHANIMATION");
 
+	animatedSprite.insertAnimation(sf::IntRect(0, 48 * 11, spritex, spritey), 5, *texture, "ATTACKING_DOWN");
+	animatedSprite.insertAnimation(sf::IntRect(0, 48 * 12, spritex, spritey), 5, *texture, "ATTACKING_LEFT");
+	animatedSprite.insertAnimation(sf::IntRect(0, 48 * 13, spritex, spritey), 5, *texture, "ATTACKING_RIGHT");
+
+	animatedSprite.setCurrentAnimation("STANDING_AFK");
+
 
 	animatedSprite.setFrameTime(sf::seconds(0.2));
 
@@ -62,7 +68,7 @@ void Player::move(const float dir_x, const float dir_y, const float & dt)
 	{
 		this->movementComponent->move(dir_x, dir_y, dt);//xetzt bewegung fest
 
-		printf("x: %d \n", dir_x);
+		//printf("x: %d \n", dir_x);
 	}
 }
 
@@ -140,23 +146,37 @@ void Player::update(sf::Time elapsed, sf::Vector2f ownerPos)
 				moveRight(elapsed);
 			}
 		}
-
+		
 		if (haventMoved)
 		{
-			switch (direction) {
-			case 2:
 
-				if (movementComponent->isAFK()) {
-					animatedSprite.setCurrentAnimation("STANDING_AFK");
+			if (!playerweapon->attack)
+			{
+				switch (direction) {
+				case 2:
+
+					if (movementComponent->isAFK()) {
+						animatedSprite.setCurrentAnimation("STANDING_AFK");
+					}
+					else {
+						animatedSprite.setCurrentAnimation("STANDING_DOWN");
+					}break;
+				case 1: animatedSprite.setCurrentAnimation("STANDING_UP"); break;
+				case 3: animatedSprite.setCurrentAnimation("STANDING_LEFT"); break;
+				case 4: animatedSprite.setCurrentAnimation("STANDING_RIGHT"); break;
+				default:break;
+
 				}
-				else {
-					animatedSprite.setCurrentAnimation("STANDING_DOWN");
-				}break;
-			case 1: animatedSprite.setCurrentAnimation("STANDING_UP"); break;
-			case 3: animatedSprite.setCurrentAnimation("STANDING_LEFT"); break;
-			case 4: animatedSprite.setCurrentAnimation("STANDING_RIGHT"); break;
-			default:break;
+			}
+			else {
+				switch (direction) {
+				case 1: animatedSprite.setCurrentAnimation("STANDING_UP"); break;
+				case 2: animatedSprite.setCurrentAnimation("ATTACKING_DOWN"); break;
+				case 3: animatedSprite.setCurrentAnimation("ATTACKING_LEFT"); break;
+				case 4: animatedSprite.setCurrentAnimation("ATTACKING_RIGHT"); break;
+				default:break;
 
+				}
 			}
 		}
 		else
@@ -284,7 +304,7 @@ sf::Vector2f Player::getviewsetoff(sf::Vector2f playerpos, int mapwidth, int map
 
 
 	if (buffer.y < 0)buffer.y = 0;
-	if (buffer.y > mapheight)buffer.y = mapheight;
+	if (buffer.y > mapheight)buffer.y = static_cast<float>(mapheight);
 
 	return buffer;
 }

@@ -59,7 +59,7 @@ Main_Game::Main_Game(sf::Vector2i screenDimensions)
 
 
 	lvhandler.InitLevels(&assetmanager);
-	gui.init(&assetmanager,&sh);
+	gui.init(&assetmanager,&sh, Spieler1.get());
 	eh.ptrTileMapWithCollision = &TileMapPainter;
 	eh.init_player_ptr(Spieler1);
 	eh.connect_to_texthandler(TextManager);
@@ -124,8 +124,23 @@ void Main_Game::HandleEvents(Game & game)
 		if (e.key.code == sf::Keyboard::M) {
 			std::cout << "x: " << Spieler1->getPosition().x <<std:: endl;
 			std::cout << "y: " << Spieler1->getPosition().y << std:: endl;
-			//assetmanager.createCurrentResourceAsBinaryFile();
+			assetmanager.createCurrentResourceAsBinaryFile();
 		
+
+			std::vector<unsigned char> test;
+			test.push_back(0xf0);
+			test.push_back(0x00);
+			test.push_back(0x00);
+			test.push_back(0xf1);
+			//unsigned int te= FileMaker::getBytesAs<unsigned int>(test);
+			
+			unsigned int te = getBytesAs<unsigned int>(test);
+
+			unsigned char tc = getBytesAs<unsigned char>(test);
+
+			cout << "die zahl ist: " << te << endl;
+			cout << "als char: " << tc << endl;
+
 			
 		}
 
@@ -166,10 +181,8 @@ void Main_Game::HandleEvents(Game & game)
 
 				if (e.mouseButton.button == sf::Mouse::Left)
 				{			
-					//0-5						//0-11
-					gui.change_skills(gui.getCollidingSkillBarSlotDragDrop(), choosenspell);
-					gui.CleanDragDrop();
-
+					//0-4						//0-11
+					gui.SetNewSkill();
 				}
 
 			}
@@ -177,8 +190,7 @@ void Main_Game::HandleEvents(Game & game)
 				if (e.mouseButton.button == sf::Mouse::Left&& e.type == sf::Event::MouseButtonPressed)
 				{
 		
-					choosenspell = gui.setDragDropSprite();
-					printf("choosenpell ist: %d\n", choosenspell);
+					gui.PickNewSkill();
 							
 				}
 				if (e.mouseButton.button == sf::Mouse::Left && e.type == sf::Event::MouseButtonReleased) {
@@ -231,20 +243,15 @@ void Main_Game::Update(Game & game)
 
 
 	if (Spieler1->attributs.isalive()) {
-		gui.reduce_hp_bar(Spieler1->attributs.getTakenDmg(), Spieler1->attributs.getMaxHp());
-		//gui.reduce_mana_bar(Spieler1->playerstats.usedmp, Spieler1->playerstats.getMaxMana());
-		gui.reduce_mana_bar_alt(Spieler1->attributs.getCurrentMana(),
-		Spieler1->attributs.getMaxMana());
+		
 
-		gui.setHpString(Spieler1->attributs.getMaxHp() -Spieler1->attributs.getTakenDmg(), Spieler1->attributs.getMaxHp());
-		gui.setManaString(Spieler1->attributs.getCurrentMana(), Spieler1->attributs.getMaxMana());
 
 	}
 
 	
 	if (Spieler1->attributs.getxp_andlvup(eh.get_xp_from_enemys())) {
-		gui.change_levelstring(Spieler1->attributs.get_level());
-		gui.fillxpbar(xp);
+		//gui.change_levelstring(Spieler1->attributs.get_level());
+		//gui.fillxpbar(xp);
 		printf("spieler sollte lv up sein \n");
 		sh.playSound("Lvupsound");
 	}
@@ -310,7 +317,7 @@ void Main_Game::handle_menues(sf::Event e)
 {
 	if (e.type == sf::Event::KeyPressed) {
 
-		if (e.key.code == sf::Keyboard::Z) gui.ToggleSkillMenue();
+		if (e.key.code == sf::Keyboard::Z) gui.toggleSkillmenue();
 
 
 		if (e.key.code == sf::Keyboard::C) {
@@ -343,7 +350,9 @@ void Main_Game::handle_menues(sf::Event e)
 	//in der handle events ist handle menues und darauf wird dann zugrgriffen obowhl der
 	//pointer schon verschoben wurde... aber durch return nach escape wird sofort aus handle
 	//events rausgesprungen :D, elegant gelöst =)
-	gui.fillxpbar(Spieler1->attributs.getxpaspercent());
+
+
+	//gui.fillxpbar(Spieler1->attributs.getxpaspercent());
 
 }
 
@@ -497,14 +506,14 @@ void Main_Game::handle_items(Game & game)
 	sf::Vector2f mouse_pos = game.mousePosView;
 	
 
-	items.update(sf::Vector2i(mouse_pos), Spieler1->getPosition(),Spieler1->attributs);
+	items.update(game.framedeltatime,sf::Vector2i(mouse_pos), Spieler1->getPosition(),Spieler1->attributs);
 	items.clear_item_vector();
 
 	items.diamond_all(sf::Vector2i(mouse_pos), Spieler1->getPosition(), game.framedeltatime);
 
 	
 	if (showinventory) {
-		items.update_inventory(sf::Vector2i(game.window.mapPixelToCoords(mousepos)),sf::Vector2f( camerapos));
+		items.update_inventory(game.framedeltatime, sf::Vector2i(game.window.mapPixelToCoords(mousepos)),sf::Vector2f( camerapos));
 	}
 
 	if (showequip) {
@@ -514,7 +523,7 @@ void Main_Game::handle_items(Game & game)
 	//sound wird in gui abgespielt!!
 	if (items.got_money())gui.give_money(items.get_earned_money());
 
-	eh.wp->change_weapon(items.get_equipped_sword());
+	Spieler1->playerweapon->change_weapon(items.get_equipped_sword());
 	Spieler1->attributs.setEqAtk( items.get_dmg_from_eq());
 
 }

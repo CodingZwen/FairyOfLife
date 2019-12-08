@@ -6,37 +6,11 @@
 
 #include <chrono>
 #include "AssetManager.h"
-
-
+#include "Item.h"
 #include "Attributs.h"
 
-enum class Equip_Type { Head, Chest, Boots, Ring, Amulet, Sword, Shield};
 class Game;
 
-//am besten die verkauftren sachen 
-//in vektor packen
-//verkaufen geht, aber item classe muss 
-//erst auf sesllung geschalten werden
-
-struct Item {
-	sf::RectangleShape rect;
-	sf::Sprite sprite;
-	bool destroy = false;
-	bool flying = false;
-	bool hovered = false;
-	Equip_Type type;
-	int dmg;
-	int def;
-	int speed;
-	int iq;
-	float krit;//für preis verwendet in clear inventory lol
-	sf::Text text;
-	sf::Text description; // noch proggen - waffentext dmg etc.
-	sf::Vector2f velocity;
-	int id;
-	bool for_sale = false;
-	sf::IntRect irect;// könnt als alternative für das sprite dienen
-};
 
 struct Diamond {
 
@@ -54,8 +28,6 @@ struct Diamond {
 class Items
 {
 
-
-
 public:
 	Items();
 	~Items();
@@ -68,14 +40,18 @@ public:
 	void draw_euqip(sf::RenderTarget &target);
 
 	void draw_diamonds(sf::RenderTarget &target);
-	void update_diamonds(sf::Vector2i mousepos, sf::Vector2f playerpos);
+
 	bool load_diamond(sf::Vector2f pos,unsigned int  color);
 	void animate_diamonds(sf::Time _elapsed);
 	void diamond_all(sf::Vector2i mousepos, sf::Vector2f playerpos, sf::Time _elapsed);
 
-	void update_equip(sf::Vector2i mousepos, sf::Vector2f playerpos);
-	void update_inventory(sf::Vector2i mousepos, sf::Vector2f playerpos);
 
+	void update_diamonds(sf::Vector2i mousepos, sf::Vector2f playerpos);
+	void update_equip(sf::Vector2i mousepos, sf::Vector2f playerpos);
+	void update_inventory(sf::Time elapsed, sf::Vector2i mousepos, sf::Vector2f playerpos);
+	void update(sf::Time elapsed,sf::Vector2i mousepos, sf::Vector2f playerpos, Attributs &atribs);
+
+	std::vector<std::vector<float>> getItemStats();
 
 	//nimmt attrib struct von spieler und errechnet aus der struct funktion
 	//den string der für euqip anzeige benötigt wird
@@ -86,7 +62,6 @@ public:
 
 
 
-	void update(sf::Vector2i mousepos, sf::Vector2f playerpos, Attributs &atribs);
 	void getklick(sf::Vector2i mousepos);
 	void clear_item_vector();
 	void clear_inventory();
@@ -135,15 +110,13 @@ public:
 private:
 
 	sf::Vector2i screenDimension;
-
-
+	
 	sf::Sprite s_inventory;
 	sf::Sprite s_itemsprite;
 	sf::Sprite s_diamonds;
 	sf::Sprite s_objectsprite;
 	sf::Sprite s_equip;
-
-
+	
 	//charequip
 
 	sf::Text t_stats;
@@ -175,8 +148,6 @@ private:
 
 	//testmoney
 	std::vector<Diamond> vmoney;
-
-
 
 	int _sword;
 	int _tilesize;

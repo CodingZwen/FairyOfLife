@@ -32,11 +32,11 @@ void Attributs::update(float dt)
 	}
 }
 
-const unsigned short  Attributs::getHpAsPercent()
+const unsigned int  Attributs::getHpAsPercent()
 {
 	//50hp -> 100 / 50 = 2 -> 1hp = 2% -> 2*currenthp = xx% life
-	short OneHpPercent = 100 / getMaxHp();
-	short currentPercent = currentHp * OneHpPercent;
+	int OneHpPercent = 100 / getMaxHp();
+	int currentPercent = currentHp * OneHpPercent;
 	return currentPercent;
 }
 
@@ -58,7 +58,7 @@ void Attributs::LevelUp()
 
 }
 
-void Attributs::hurt(const unsigned short damage)
+void Attributs::hurt(const unsigned int damage)
 {
 	currentHp -= damage;
 	takendmg += damage;
@@ -66,7 +66,7 @@ void Attributs::hurt(const unsigned short damage)
 
 }
 
-void Attributs::drainMana(unsigned short cost)
+void Attributs::drainMana(unsigned int cost)
 {
 	if (cost < currentMana)
 		currentMana -= cost;
@@ -84,7 +84,7 @@ void Attributs::initStats()
 	currentHp = hp;
 }
 
-void Attributs::setEquipStats(unsigned short _atk, unsigned short _def, unsigned short _iq, float _crit, unsigned short _hp)
+void Attributs::setEquipStats(unsigned int _atk, unsigned int _def, unsigned int _iq, float _crit, unsigned int _hp)
 {
 	eqatk = _atk;
 	eqdef = _def;
@@ -96,7 +96,7 @@ void Attributs::setEquipStats(unsigned short _atk, unsigned short _def, unsigned
 
 }
 
-void Attributs::setStats(unsigned short _level,unsigned short _atk, unsigned short _def, unsigned short _iq, float _crit, unsigned short _hp,bool heal)
+void Attributs::setStats(unsigned int _level,unsigned int _atk, unsigned int _def, unsigned int _iq, float _crit, unsigned int _hp,bool heal)
 {
 
 	atk = _atk;
@@ -116,7 +116,7 @@ void Attributs::setStats(unsigned short _level,unsigned short _atk, unsigned sho
 
 }
 
-bool Attributs::getxp_andlvup(short _xp)
+bool Attributs::getxp_andlvup(int _xp)
 {
 		erfahrung += _xp;
 		if (erfahrung > entitylevel * 100) { LevelUp(); erfahrung = 0; return true; }
@@ -124,7 +124,7 @@ bool Attributs::getxp_andlvup(short _xp)
 		return false;	
 }
 
-const unsigned short Attributs::getxpaspercent()
+const unsigned int Attributs::getxpaspercent()
 {
 	//printf("erfahrung: %d : level: %d\n ", erfahrung, entitylevel);
 	return erfahrung / entitylevel;

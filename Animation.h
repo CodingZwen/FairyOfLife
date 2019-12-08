@@ -26,7 +26,7 @@ public:
 
 	void update(sf::Time _elapsed,sf::Vector2f position);
 	void set_animrow(int _row) { currentrow = _row; };
-	void set_animcolumn(int _column) { column=_column; };
+	void set_animcolumn(int _column);
 	void draw(sf::RenderWindow &window);
 	   	 
 };

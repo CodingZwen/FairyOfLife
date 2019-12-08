@@ -50,13 +50,15 @@ void FileMaker::printFileHexadecimal(string filename, bool manual)
 	char c;  // signed!
 	unsigned int count = 0;
 	while (quelle.get(c)) {
-		unsigned char uc = static_cast<unsigned char>(c);
-		unsigned int zahl = static_cast<unsigned int>(uc);
+		//bsp 17  kommt rein als byte ->
+		//bsp mit 0c
+		unsigned char uc = static_cast<unsigned char>(c); //in buchstabe casten -> 17 , 
+		unsigned int zahl = static_cast<unsigned int>(uc);//inzahlcasten -> 23 , 12
 		const string codierung{ "0123456789ABCDEF" };
 		// 2 stellig ausgeben
 
 
-
+		// code[12/16] <<  code[12%16] = 0,12
 		cout << codierung.at(zahl / 16) << codierung.at(zahl % 16) << endl;
 
 		if (++count % 4 == 0) {	cout << '\n';}
@@ -108,6 +110,7 @@ std::string FileMaker::cutVector(vector<unsigned char>& vecToCut, int cutCount)
 
 }
 
+
 //evtl ein tempklate aus beiden funktionen bauen
 //und dann testen in textdatei was passiert wenn ich int 
 //reinschreibe oder bytes
@@ -133,6 +136,147 @@ void FileMaker::createBinaryFile(std::vector<unsigned char>& binaryCharVec, stri
 	std::copy(binaryCharVec.begin(), binaryCharVec.end(), output_iterator);
 
 
+}
+
+std::vector<unsigned char> FileMaker::CreateBinarySavefileVecReadyToPrint(unsigned int itemcount, unsigned int playerlevel, unsigned int money, unsigned int posx, unsigned posy, unsigned int xp, std::string itemstring, std::vector<std::vector<float>> &items)
+{
+	std::vector<unsigned char> savefile;
+	std::vector<float> statbuffer;
+
+	//bps 10 items -> 24 + 10 * 25 = 274
+	//bytes for file = 6*4 für character stats -> 24 + itemcount * (6*4+1) = 25
+	savefile.reserve(24 + (itemcount * 25));
+
+
+
+	statbuffer.push_back(static_cast<float>(playerlevel));
+	statbuffer.push_back(static_cast<float>(money));
+	statbuffer.push_back(static_cast<float>(posx));
+	statbuffer.push_back(static_cast<float>(posy));
+	statbuffer.push_back(static_cast<float>(xp));
+
+
+	//write item count at beginning of file
+
+	unsigned int vartoput = itemcount;
+	unsigned char buffer[4];
+
+	std::copy(static_cast<const unsigned char*>(static_cast<const void*>(&vartoput)),
+		static_cast<const unsigned char*>(static_cast<const void*>(&vartoput)) + sizeof(vartoput)
+		, buffer);
+
+	for (int j = 0; j < 4; j++) {
+
+		//1 first number is itemcount
+		savefile.insert(savefile.begin(), buffer[j]);
+	}
+
+
+
+	//dann kommen alle stats rein
+	for (auto w : statbuffer)
+	{
+		float f = w;
+		std::copy_backward(static_cast<const unsigned char*>(static_cast<const void*>(&f)),
+			static_cast<const unsigned char*>(static_cast<const void*>(&f)) + sizeof(f)
+			, buffer);
+
+		for (int j = 0; j < 4; j++) {
+
+			savefile.push_back(buffer[j]);
+		}
+	}
+	//achtun level fehlt noch
+	//jetzt itemstring hinten dran packen#//am besten von items returnen lassen
+	//ein strin oder char array mit allen items
+
+
+	for (auto &s : items)
+	{
+		
+		for (auto &k : s)
+		{
+			float f = k;
+			std::copy_backward(static_cast<const unsigned char*>(static_cast<const void*>(&f)),
+				static_cast<const unsigned char*>(static_cast<const void*>(&f)) + sizeof(f)
+				, buffer);
+
+			for (int j = 0; j < 4; j++) {
+
+				savefile.push_back(buffer[j]);
+			}
+		}
+	}
+
+
+	return savefile;
+}
+
+void FileMaker::printSaveFile(std::vector<unsigned char>& binarysavefile)
+{
+
+//	
+//	uint32_t ImageCount = GetFirstBytesBinaryVecAsInt(v);//3
+//	cout << "imagecount: " << ImageCount << endl;
+//	vector<uint32_t> ImageSizes;//ich könnte hier schon den std map laden und mit 
+//	//der funktion die die ersten 30 zeichen abscheneidet den namen speichern aber ich mach erstmal char vector :D
+//
+//	vector<vector<unsigned char>> bilder;
+//
+//	int count = 0;
+//	MyBytes mb;
+//	std::vector<unsigned char>::iterator it = v.begin() + 4;
+//
+//
+//	//ein byte mehr lesen damit if trifft
+//	//holt die bild groessen
+//
+//	for (; it != v.begin() + 4 * ImageCount + 5; it++)
+//	{
+//		if (count / 4 == 1) {
+//			count = 0;
+//			cout << "bytes reset byte: " << mb.getBytesAsInt() << endl;
+//			ImageSizes.push_back(mb.getBytesAsInt());
+//			mb.reset();
+//		}
+//
+//		mb.setBytes(*it, count);
+//		count++;
+//
+//	}
+//	cout << "anzahl bilder: " << ImageSizes.size() << endl;
+//
+//	//wir überspringen den ersten int und die ints der bilderbytes und
+////fangen direkt bei den bilderchar arrays ab
+//	it = v.begin() + 4 * ImageCount + 4;
+//	int index = std::distance(v.begin(), it);
+//	cout << "startposition: " << index << endl;
+//
+//	int position = 0;
+//	int currentPicture = 0;
+//	count = 0;
+//	vector<unsigned char> buffer;
+//	for (; it != v.end(); it++)
+//	{
+//
+//		//cout << "buchstabe: " << *it << endl;
+//		buffer.push_back(*it);
+//		count++;
+//
+//		//beim letzten biuld trifft das if nicht ein weil for shcleife zu ende
+//		if (count == ImageSizes[currentPicture])
+//		{
+//			bilder.push_back(buffer);
+//			count = 0;
+//			currentPicture++;
+//			cout << "bild fertig, wird in charvecreingemacht vectorsize:" << buffer.size() << endl;
+//			buffer.clear();
+//
+//		}
+//
+//	}
+//
+//	return bilder;
 }
 
 
@@ -409,6 +553,7 @@ std::vector<unsigned char>  FileMaker::CreateBinaryVecReadyToPrint(vector<string
 		std::copy(static_cast<const unsigned char*>(static_cast<const void*>(&x)),
 			static_cast<const unsigned char*>(static_cast<const void*>(&x)) + sizeof x,
 			bytes);
+
 		for (int j = 0; j < 4; j++) {
 		
 			finalBinaryVec.insert(finalBinaryVec.begin(),bytes[j]);
@@ -450,6 +595,11 @@ void FileMaker::PrintIntToBytes(int i)
 	std::copy(static_cast<const unsigned char*>(static_cast<const void*>(&x)),
 		static_cast<const unsigned char*>(static_cast<const void*>(&x)) + sizeof x,
 		bytes);
+
+
+
+
+
 
 	cout << "Zahl: " << i << " als Hexa: ";
 	for (int i = 3; i > -1; i--)

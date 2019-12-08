@@ -47,7 +47,7 @@ void EntityHandler::connectToAssets(AssetManager  & Amanager)
 
 
 	wp = new PlayerWeapon(&ptrAssetManager->GetTexture("weaponset"));
-	wp->change_weapon(2);
+	wp->change_weapon(3);
 	
 
 
@@ -71,7 +71,7 @@ void EntityHandler::PopRaven(int xpos, int ypos)
 {
 
 
-	Raven* raven = new Raven(sf::Vector2f(xpos, ypos), &ptrAssetManager->GetTexture("raven"));
+	Raven* raven = new Raven(sf::Vector2f(static_cast<float>(xpos), static_cast<float>(ypos)), &ptrAssetManager->GetTexture("raven"));
 	raven->ptrAstern = &this->asterngetuned;
 	raven->set_ptr_to_list(&entities);
 	entities.push_back(raven);
@@ -79,11 +79,11 @@ void EntityHandler::PopRaven(int xpos, int ypos)
 }
 
 //po wird vorher gecheckt
-void EntityHandler::PopTree(int posx,int posy)
+void EntityHandler::PopTree(int xpos,int ypos)
 {
 	BaumGegner* b = new BaumGegner(sf::Vector2f(0,0), &ptrAssetManager->GetTexture("baum"));
 
-	b->movementComponent->setPosition(sf::Vector2f(posx, posy));
+	b->movementComponent->setPosition(sf::Vector2f(static_cast<float>(xpos), static_cast<float>(ypos)));
 	b->ptrAstern = &this->asterngetuned;
 	this->ptr_soundhandler->playSound("treesound");
 	entities.push_back(b);
@@ -109,7 +109,7 @@ void EntityHandler::PopAlotOfButterflys(sf::Vector2f screenDimension)
 	int randomx=0;
 	int randomy=0;
 
-	for (int i = 0; i < 500; i++) {
+	for (int i = 0; i < 1800; i++) {
 		
 
 		randomx = rand() % (int)screenDimension.x + 100;
@@ -243,12 +243,15 @@ void EntityHandler::update(Items & items, sf::Time _elapsed, sf::Vector2f const 
 					} //0-69 items auf dem waffen asset
 					vxp.push_back(50);
 				}
+
+				e->cleanTargets();
+				
 			}
 			else if (e->id == 32) {
 				if (ptrIceOrb)ptrIceOrb = NULL;
 			}
 
-			e->cleanTargets();
+			
 			i = entities.erase(i);
 			delete e;
 		}

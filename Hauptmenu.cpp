@@ -192,7 +192,7 @@ void Hauptmenu::Update(Game & game)
 
 	if (_swolke.getPosition().x < -200) {
 		int rnd = rand() % 700 + 1;
-		_swolke.setPosition(1300, rnd);
+		_swolke.setPosition(1300.f, rnd);
 	}
 
 

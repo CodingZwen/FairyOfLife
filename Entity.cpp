@@ -244,6 +244,8 @@ void Entity::set_ptr_to_list(std::list<Entity*>*entitylist)
 
 void Entity::resetTarget()
 {
+
+	if(ptrTargetEntity)
 	ptrTargetEntity = nullptr;
 }
 
@@ -256,7 +258,8 @@ void Entity::cleanTargets()
 {
 	if (ptrTargetEntity)
 	{
-
+		printf("hier war ich noch\n");
+		printf("mein name war: %s\n", name.c_str());
 		ptrTargetEntity->resetTarget();
 	}
 }
@@ -331,7 +334,7 @@ void Entity::moveNW(sf::Time elapsed)
 	direction = 1;
 	haventMoved = false;
 	//angle = 270;
-	movementComponent->move(-0.8f, -.4, elapsed.asSeconds());
+	movementComponent->move(-0.8f, -.4f, elapsed.asSeconds());
 
 
 }
@@ -344,7 +347,7 @@ void Entity::moveNE(sf::Time elapsed)
 	haventMoved = false;
 	//angle = 270;
 
-	movementComponent->move(0.8, -0.4, elapsed.asSeconds());
+	movementComponent->move(0.8f, -0.4f, elapsed.asSeconds());
 
 
 }
@@ -354,7 +357,7 @@ void Entity::moveSW(sf::Time elapsed)
 	direction = 2;
 	haventMoved = false;
 	//angle = 90;
-	movementComponent->move(-0.8, 0.4, elapsed.asSeconds());
+	movementComponent->move(-0.8f, 0.4f, elapsed.asSeconds());
 
 }
 
@@ -363,7 +366,7 @@ void Entity::moveSE(sf::Time elapsed)
 
 	direction = 2;
 	haventMoved = false;
-	movementComponent->move(0.8, 0.4, elapsed.asSeconds());
+	movementComponent->move(0.8f, 0.4f, elapsed.asSeconds());
 
 }
 

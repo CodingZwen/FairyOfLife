@@ -41,8 +41,8 @@ void Enemy::set_Spawn_Area(sf::Vector2i const & pos, int fieldsize)
 		finalpos.y = (y1 + (rand() % (y2 - y1 + 1)));
 
 
-		float  x = finalpos.x;
-		float  y = finalpos.y;
+		float  x = static_cast<float>(finalpos.x);
+		float  y = static_cast<float>(finalpos.y);
 
 		movementComponent->setPosition(sf::Vector2f(x, y));
 

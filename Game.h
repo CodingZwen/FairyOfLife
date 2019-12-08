@@ -31,6 +31,7 @@ public:
 	~Game();
 
 	sf::RenderWindow window;
+
 	enum class Instanzen { Startmenue, Start_Game, Options, Pause };
 
 	void Init();

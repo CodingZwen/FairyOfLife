@@ -21,8 +21,8 @@ public:
 	const sf::Texture* getSpriteSheet() const;
 	
 	//framecount
-	std::size_t getSize() const;
-	const sf::IntRect& getFrame(std::size_t n) const;
+	size_t getSize() const;
+	const sf::IntRect& getFrame(size_t n) const;
 
 
 

@@ -128,6 +128,6 @@ void Game::ChangeState(Instanzen inst)
 	}
 
 
-
+	//system("pause");
 
 }
