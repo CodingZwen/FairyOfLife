@@ -54,6 +54,10 @@ public:
 	void inkrementDarkness();
 	void inkrementLight();
 
+	sf::Sprite getMinimap();
+	sf::CircleShape getMiniMapasCircle(); //template??
+	void initMiniMap();
+
 private:
 
 	short alpha = 255;
@@ -61,8 +65,6 @@ private:
 
 	sf::Time tempelapsed;
 	sf::Clock uhr;
-
-
 
 	Map *ptrCurrentMap;
 
@@ -77,9 +79,13 @@ private:
 	sf::RenderStates states;
 	sf::Texture distortionMap;
 
-
-	int animationcount;
-	int m_tilesize;	
+	//minimap
+	sf::RenderTexture minimap;
+	sf::CircleShape minimapCircle;
+	sf::CircleShape minimapBackground;
+	
+	
+	
 
 };
 
