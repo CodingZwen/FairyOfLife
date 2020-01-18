@@ -27,9 +27,10 @@ void GUI::draw(sf::RenderTarget & target)
 	
 	playerframe.draw(target);
 	skillframe.draw(target);
+	optionframe->draw(target);
 }
 
-void GUI::update(sf::Vector2f const & _viewPos, sf::Time elapsed, sf::Vector2f mousepos)
+void GUI::update(sf::Vector2f const & _viewPos, sf::Time elapsed, sf::Vector2f &mousepos)
 {
 	viewPos = _viewPos;
 
@@ -42,9 +43,13 @@ void GUI::update(sf::Vector2f const & _viewPos, sf::Time elapsed, sf::Vector2f m
 	txtMoney.setPosition(viewPos.x - 455, viewPos.y + 245);
 	smoney.setPosition(viewPos.x - 485, viewPos.y + 255);
 
+
+	optionframe->update(mousepos);
+
 }
 
-void GUI::init(AssetManager *AM, SoundHandler *sh, Player *player)
+void GUI::init(AssetManager *AM, SoundHandler *sh,
+	Player *player, sf::RenderTarget &t, FileMaker &fm, Game &g)
 {
 	ptrplayer = player;
 	ptrSoundhandler = sh;
@@ -65,6 +70,13 @@ void GUI::init(AssetManager *AM, SoundHandler *sh, Player *player)
 
 	skillframe.init(AM, viewPos);
 	playerframe.init(AM, sh);
+
+
+
+	optionframe = make_shared<OptionsFrame>();
+
+	optionframe->init(&AM->GetTexture("optionframe"),t,fm,
+		AM->ptr_GetFont("font"));
 }
 
 
@@ -160,9 +172,6 @@ void GUI::update_money(sf::Time elapsed)
 
 	}
 
-
-
-
 }
 
 void GUI::give_money(int _money)
@@ -172,6 +181,14 @@ void GUI::give_money(int _money)
 	ptrSoundhandler->playSound("Kachingsound");
 
 }
+
+OptionsFrame * GUI::getOptionframe() const
+{
+	return optionframe.get();
+}
+
+
+
 
 
 void GUI::initTxtMoney()

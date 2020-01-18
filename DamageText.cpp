@@ -29,7 +29,7 @@ void DamageText::draw(sf::RenderTarget & t)
 
 DamageText::DamageText()
 {
-
+	
 }
 
 

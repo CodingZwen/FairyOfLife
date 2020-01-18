@@ -37,6 +37,7 @@
 		void LoadFromFile();
 		void LoadAllTexturesFromImages();
 
+		FileMaker &getfilemaker() { return fm; }
 
 		void setTextureSmooth(string name);
 

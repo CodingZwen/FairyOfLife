@@ -95,6 +95,8 @@ void Cat::update(sf::Time elapsed, sf::Vector2f playerpos)
 		
 	}
 
+	//cout << "caty: " << movementComponent->getPosition().y << endl;
+
 	animatedSprite.play();
 	animatedSprite.update(elapsed);
 }

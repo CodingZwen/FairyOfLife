@@ -53,6 +53,8 @@ public:
 	void update(Items &items, sf::Time _elapsed, sf::Vector2f const playerpos);
 	void collide(sf::Time elapsed);
 		
+	void drawbehindplayer(sf::RenderWindow &window);
+	void drawinfrontplayer(sf::RenderWindow &window);
 	void draw(sf::RenderWindow &window);
 	void init_player_ptr(std::shared_ptr<Player> &ptrplayer) { ptr_player = ptrplayer; }
 	void isCollide_with_player();

@@ -7,9 +7,9 @@
 //damit seltenere sache im verhaeltnis droppen koennen
 	
 enum class Rarity {WHITE,GREEN,BLUE,
-PURPLE,GOLD};
+PURPLE,GOLD,GREY};
 
-enum EquipType { Sword, Shield,
+enum EquipType { Weapon, Shield,
 Head, Chest, Boots, 
 Amulet, Ring1,Ring2  };
 
@@ -44,7 +44,6 @@ class Item
 	unsigned int id;
 	sf::Sprite itemSprite;
 	sf::RectangleShape rect;
-	sf::FloatRect itemSpriteRect;
 	sf::RectangleShape textBackground;
 	sf::Text itemName;
 	sf::Text itemDescription; //stats etc
@@ -59,17 +58,19 @@ class Item
 
 public:
 	EquipType type;
+	Rarity rarity;
+	
 
 	explicit Item(unsigned int ID, 	
 		int atk, int def,
-		int speed, int iq,Rarity rarity,
+		int speed, int iq, float krit,Rarity rarity,
 		sf::Vector2f spawnPos,	sf::Sprite &spr,sf::Font *font);
 
 	Item();
 	~Item();
 
 
-	void update(sf::Time elapsed,sf::Vector2f target,sf::Vector2i mousepos);
+	void update(sf::Time elapsed, sf::FloatRect player, sf::Vector2i mousepos);
 	void draw(sf::RenderTarget &target);
 
 	Item& operator= (const Item left);
@@ -78,8 +79,7 @@ public:
 	void drawOnlySprite(sf::RenderTarget &target);
 
 	static  std::string get_description_string(std::string art, int atk, int def, int speed, int iq);
-	sf::Vector2f getVelocityToTarget(const sf::Vector2f &targetPos,
-		 sf::Time &elapsed);
+	sf::Vector2f getVelocityToTarget(const sf::Vector2f &targetPos);
 
 
 	bool sprIsHovered(sf::Vector2i const mousepos);
@@ -87,23 +87,53 @@ public:
 	bool isdestroyable() { return todestroy; }
 	bool issellable() { return tosell; }
 	void setPosition(sf::Vector2f pos);
+	void setVelocity(sf::Vector2f velo);
+	void setVelocityToTarget(sf::Vector2f Targetpos);
 
 	sf::Sprite &getSprite();
-	Stats &getStats();
+	const Stats &getStats();
 	const unsigned int &getid() { return id; }
 
 	void destroy() { todestroy = true; }
 	void setnotdestroy() { todestroy = false; }
 	void setsellable() { tosell = true; }
 	void activatetarget() { havetarget = true; }
+
+	void setItemRarity(const char *weaponrarity);
+
+
+	void setWeaponType(const char *weapontype);
+
+
+	   
 	void turnofftarget();
 	void descriptionON();
 	void descriptionOFF();
 
 
+
+	template<typename T>
+	T getName() {
+		return T;
+	}
+
+	template<>
+	const char* Item::getName<const char*>()
+	{
+		return itemName.getString().toAnsiString().c_str();
+	}
+
+	template <>
+	std::string Item::getName<std::string>()
+	{
+		return itemName.getString();
+	}
+
+	void setID(int ID);
+
+
 	 std::string getItemasString();
 	 std::vector<float> getItemStats();
-
 
 
 };

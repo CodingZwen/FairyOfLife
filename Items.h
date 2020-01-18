@@ -47,11 +47,13 @@ public:
 
 
 	void update_diamonds(sf::Vector2i mousepos, sf::Vector2f playerpos);
-	void update_equip(sf::Vector2i mousepos, sf::Vector2f playerpos);
-	void update_inventory(sf::Time elapsed, sf::Vector2i mousepos, sf::Vector2f playerpos);
-	void update(sf::Time elapsed,sf::Vector2i mousepos, sf::Vector2f playerpos, Attributs &atribs);
+	void update_equip(sf::Vector2i mousepos, sf::Vector2f playerpos, sf::FloatRect playerBox);
+	void update_inventory(sf::Time elapsed, sf::Vector2i mousepos, sf::Vector2f playerpos, sf::FloatRect playerBox);
+	void update_dropped_items(sf::Time elapsed,sf::Vector2i mousepos,
+		sf::FloatRect player, Attributs &atribs);
 
 	std::vector<std::vector<float>> getItemStats();
+	std::vector<Item> &getInventoryItems();
 
 	//nimmt attrib struct von spieler und errechnet aus der struct funktion
 	//den string der für euqip anzeige benötigt wird
@@ -65,6 +67,8 @@ public:
 	void getklick(sf::Vector2i mousepos);
 	void clear_item_vector();
 	void clear_inventory();
+	void sell_items();
+
 	void clear_money_vector();
 	int get_dmg_from_eq();
 
@@ -106,6 +110,8 @@ public:
 	}
 
 	void initScreenDimension(sf::Vector2i screenD);
+
+	sf::Sprite &getItemSprites() { return this->s_itemsprite; }
 
 private:
 

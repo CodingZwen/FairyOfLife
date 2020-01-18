@@ -1,10 +1,8 @@
 #pragma once
-#include <SFML\Graphics.hpp>
-#include <memory>
+
 #include "Gamestate.h"
 #include "Hauptmenu.h"
 #include "Main_Game.h"
-
 #define DEFAULTSCREENSIZEX 1280
 #define DEFAULTSCREENSIZEY 720
 
@@ -44,6 +42,7 @@ public:
 	void ChangeState(Instanzen inst);
 	bool isRunning() { return running; }
 	void stoprunning() {running = false; window.close();}
+	void Screenshot();
 
 	sf::Clock fpsClock; //für fps
 	sf::Clock clock;

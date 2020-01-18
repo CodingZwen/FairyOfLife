@@ -6,7 +6,7 @@
 Button::Button(float x, float y, float width, float height, sf::Font * font, std::string text, sf::Color idleColor, sf::Color hoverColor, sf::Color activeColor)
 {
 
-
+	offsetviewCenter = sf::Vector2f(x, y);
 
 	this->buttonState = BTN_IDLE;
 
@@ -51,6 +51,7 @@ void Button::update(const sf::Vector2f mousepos)
 	{
 		this->buttonState = BTN_HOVER;
 
+		
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 		{
 			this->buttonState = BTN_ACTIVE;
@@ -80,4 +81,16 @@ void Button::render(sf::RenderTarget * target)
 	target->draw(this->shape);
 	target->draw(this->text);
 
+}
+
+void Button::setPosition(sf::Vector2f newpos)
+{
+	shape.setPosition(newpos);
+	text.setPosition(newpos);
+}
+
+void Button::updatePosition(sf::Vector2f viewcenter)
+{
+	shape.setPosition(viewcenter+offsetviewCenter);
+	text.setPosition(viewcenter + offsetviewCenter);
 }

@@ -176,6 +176,10 @@ void AssetManager::LoadTexture(std::string  name, const char *fileName, bool smo
 	void AssetManager::LoadAllTexturesFromImages()
 	{
 
+		LoadTexture("butterfly", "Spiel_Projekt_Protectyourisle_Assets\\Animal_Assets\\butterfly.png", 1);
+		LoadTexture("cat", "Spiel_Projekt_Protectyourisle_Assets\\Animal_Assets\\cat.png", 1);
+		LoadTexture("raven", "Spiel_Projekt_Protectyourisle_Assets\\Animal_Assets\\raven.png", 1);
+
 		LoadTexture("feuerball", "Spiel_Projekt_Protectyourisle_Assets\\Spell_Assets\\fireball.png");
 		LoadTexture("eisball", "Spiel_Projekt_Protectyourisle_Assets\\Spell_Assets\\iceball.png");
 		LoadTexture("eisball2", "Spiel_Projekt_Protectyourisle_Assets\\Spell_Assets\\fire_blue.png");
@@ -196,9 +200,7 @@ void AssetManager::LoadTexture(std::string  name, const char *fileName, bool smo
 		LoadTexture("diamondanimation", "Spiel_Projekt_Protectyourisle_Assets\\Gui\\diamondanimation.png", 1);
 		LoadTexture("skillmenueframe", "Spiel_Projekt_Protectyourisle_Assets\\Gui\\skillmenueframe.png", 1);
 		LoadTexture("skillmenueSpellSprites", "Spiel_Projekt_Protectyourisle_Assets\\Gui\\skillmenueSpellSprites.png", 1);
-		LoadTexture("butterfly", "Spiel_Projekt_Protectyourisle_Assets\\Animal_Assets\\butterfly.png", 1);
-		LoadTexture("cat", "Spiel_Projekt_Protectyourisle_Assets\\Animal_Assets\\cat.png", 1);
-		LoadTexture("raven", "Spiel_Projekt_Protectyourisle_Assets\\Animal_Assets\\raven.png", 1);
+		LoadTexture("optionframe", "Spiel_Projekt_Protectyourisle_Assets\\Gui\\optionframe.png", 1);
 
 
 		LoadTexture("items", "Spiel_Projekt_Protectyourisle_Assets\\Item_Assets\\items.png", 1);

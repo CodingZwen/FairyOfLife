@@ -12,7 +12,7 @@ void SingleText::init_font(sf::Font & font)
 {
 	text.setFont(font);
 	text.setFillColor(sf::Color::Yellow);   //text kommt von entity
-	text.setCharacterSize(30);
+	text.setCharacterSize(18);
 	text.setString("default");
 	text.setOutlineColor(sf::Color::Black);
 	text.setOutlineThickness(1.0);

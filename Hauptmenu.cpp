@@ -192,13 +192,13 @@ void Hauptmenu::Update(Game & game)
 
 	if (_swolke.getPosition().x < -200) {
 		int rnd = rand() % 700 + 1;
-		_swolke.setPosition(1300.f, rnd);
+		_swolke.setPosition(1300.f, static_cast<float>(rnd));
 	}
 
 
 	if (_swolke2.getPosition().x < -200) {
 		int rnd = rand() % 700 + 1;
-		_swolke2.setPosition(1300, rnd);
+		_swolke2.setPosition(1300.f, static_cast<float>(rnd));
 	}
 
 	

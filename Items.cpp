@@ -76,7 +76,7 @@ bool Items::loaditem(sf::Vector2f itempos, int itemnr,int Rarity)
 	float krit = 1.0f;
 
 
-	Item item(itemnr,atk,def,speed,iq,Rarity::PURPLE,itempos,s_itemsprite,&font);
+	Item item(itemnr,atk,def,speed,iq,krit,Rarity::PURPLE,itempos,s_itemsprite,&font);
 	
 	
 	_vitems.push_back(item);
@@ -236,7 +236,7 @@ void Items::diamond_all(sf::Vector2i mousepos, sf::Vector2f playerpos, sf::Time 
 
 
 
-void Items::update_equip(sf::Vector2i mousepos, sf::Vector2f playerpos)
+void Items::update_equip(sf::Vector2i mousepos, sf::Vector2f playerpos,sf::FloatRect playerBox)
 {
 	s_equip.setPosition(sf::Vector2f(playerpos.x + 120, playerpos.y - 128));
 	sf::Vector2f windowpos = sf::Vector2f(s_equip.getPosition().x +36, s_equip.getPosition().y + 22);
@@ -247,7 +247,7 @@ void Items::update_equip(sf::Vector2i mousepos, sf::Vector2f playerpos)
 
 	for (std::size_t i = 0; i  < _equip_items.size(); ++i)
 	{
-		_equip_items[i].update(elapsed, playerpos, mousepos);
+		_equip_items[i].update(elapsed, playerBox, mousepos);
 
 		int tu = i % 2;
 		int tv = i / 2;
@@ -280,7 +280,7 @@ void Items::update_equip(sf::Vector2i mousepos, sf::Vector2f playerpos)
 
 		}
 
-		if (_equip_items[i].type == EquipType::Sword) {
+		if (_equip_items[i].type == EquipType::Weapon) {
 			_equip_items[i].setPosition(sf::Vector2f(windowpos.x + 1, windowpos.y + 190));
 
 		}
@@ -298,7 +298,7 @@ void Items::update_equip(sf::Vector2i mousepos, sf::Vector2f playerpos)
 
 }
 
-void Items::update_inventory(sf::Time elapsed, sf::Vector2i mousepos, sf::Vector2f playerpos)
+void Items::update_inventory(sf::Time elapsed, sf::Vector2i mousepos, sf::Vector2f playerpos, sf::FloatRect playerBox)
 {
 
 	sf::Vector2f pos = sf::Vector2f((playerpos.x-302),(playerpos.y-112));
@@ -312,7 +312,7 @@ void Items::update_inventory(sf::Time elapsed, sf::Vector2i mousepos, sf::Vector
 		int tv = i / 6;
 		
 
-		_inventory_items[i].update(elapsed,playerpos,mousepos);
+		_inventory_items[i].update(elapsed, playerBox,mousepos);
 
 		_inventory_items[i].setPosition(sf::Vector2f(pos.x + (tu * 52), pos.y + (tv * 48)));
 			
@@ -330,6 +330,7 @@ void Items::update_inventory(sf::Time elapsed, sf::Vector2i mousepos, sf::Vector
 			if (_rclicked) {
 				_inventory_items[i].setsellable();
 				clear_inventory();
+				printf("sachen gelöscht\n");
 
 			}
 
@@ -374,8 +375,8 @@ void Items::playerstats_inkrement_from_equ(Attributs & atribs)
 }
 
 //update the dropped items on the ground
-void Items::update(sf::Time elapsed, sf::Vector2i mousepos ,
-	sf::Vector2f playerpos, Attributs &atribs)
+void Items::update_dropped_items(sf::Time elapsed, sf::Vector2i mousepos ,
+	sf::FloatRect playerpos, Attributs &atribs)
 {
 	playerstats_inkrement_from_equ(atribs);
 	t_stats.setString(get_eq_stats_as_string(atribs));
@@ -385,6 +386,12 @@ void Items::update(sf::Time elapsed, sf::Vector2i mousepos ,
 		
 
 		_vitems[i].update(elapsed, playerpos, mousepos);
+
+		if (playerpos.intersects(_vitems[i].getSprite().getGlobalBounds()))
+		{		//not destroy.. puts in invecotry
+			_vitems[i].destroy();
+			
+		}
 
 	}
 
@@ -406,6 +413,11 @@ std::vector<std::vector<float>> Items::getItemStats()
 	return items;
 }
 
+std::vector<Item> &Items::getInventoryItems()
+{
+	return _inventory_items;
+}
+
 void Items::getklick(sf::Vector2i mousepos)
 {
 
@@ -415,6 +427,7 @@ void Items::getklick(sf::Vector2i mousepos)
 		if (_vitems[i].getSprite().getGlobalBounds().contains(sf::Vector2f(mousepos)))
 		{
 			_vitems[i].activatetarget();
+			
 		}
 	}
 }
@@ -460,6 +473,11 @@ void Items::clear_item_vector()
 
 void Items::clear_inventory()
 {
+	_inventory_items.clear();
+}
+
+void Items::sell_items()
+{
 	for (std::size_t i = 0; i < _inventory_items.size(); ++i)
 	{
 
@@ -490,7 +508,7 @@ void Items::clear_money_vector()
 			int money = vmoney[i].irect.top+1;
 
 			vmoney.erase(vmoney.begin() + i);
-			_vselled_items.push_back(money);
+			_vselled_items.push_back(money); //das ist einfach money vector
 		
 		}
 
@@ -601,7 +619,7 @@ sf::Vector2f Items::getVelocityToTarget(const sf::Vector2f &targetPos,
 void Items::equip_item(Item & item)
 {
 
-	if (item.type == EquipType::Sword) {
+	if (item.type == EquipType::Weapon) {
 		_sword = item.getid();
 	
 	}

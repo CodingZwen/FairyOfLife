@@ -42,6 +42,8 @@ public:
 		bool getxp_andlvup(int _xp);
 		//const doenst matter?
 		const unsigned int  getHpAsPercent();
+		const unsigned int getCurrentXP() { return erfahrung; }
+
 		const unsigned int getTakenDmg() { return takendmg; }
 		const unsigned int get_level() { return entitylevel; }
 		const unsigned int getdmg() { return atk + eqatk; }
@@ -63,7 +65,14 @@ public:
 		//set normal stats,also inits currentmana
 		void setStats(unsigned int _level, unsigned int _atk, unsigned int _def, unsigned int _iq, float _crit, unsigned int _hp, bool heal = true);
 		void setCastTime(float castTime) { this->casttime = castTime; }
-
+		void setLevel(unsigned int level)
+		{
+			entitylevel = level;
+		}
+		void setXP(unsigned int xp)
+		{
+			this->erfahrung = xp;
+		}
 };
 
 

@@ -5,7 +5,7 @@
 	
 //id ist letzendlich nur das bild
 	Item::Item(unsigned int ID, int atk, int def,
-		int speed, int iq, Rarity rarity,
+		int speed, int iq,float krit, Rarity rarity,
 		sf::Vector2f spawnPos, sf::Sprite &spr, sf::Font *font)
 	{
 		if (ID >= 70) {
@@ -16,12 +16,11 @@
 
 		sf::Vector2f Pos = spawnPos;
 		itemSprite = spr;
+	
 		setPosition(spawnPos);
 
 
 		rect.setSize(sf::Vector2f(50, 50));
-		//rect.setFillColor(sf::Color(33, 33, 33, 200));
-		//rect.setFillColor(sf::Color(72, 66, 245, 200));
 		rect.setFillColor(sf::Color(10, 14, 46, 200));
 		rect.setOutlineThickness(3.f);
 		rect.setOutlineColor(sf::Color(200, 200, 200, 250));
@@ -50,25 +49,14 @@
 
 
 
-		//itemsnur wird in enemy handler gesetzt und kann 
-		//0-69 sein, dementsprechend brauch ich hier tv tu
-		//damit daraus in item wird (texturerect weapon sheet)
-		int tilecount = ID;
+		setID(ID);
 		id = ID;
-		int tv, tu;
-
-		tu = (tilecount % (320 / 32));
-		tv = (tilecount / (320 / 32));
-		printf("\ndas war tv: %d und das war tu: %d\n", tu, tv);
-
-		itemSprite.setTextureRect(sf::IntRect(tu * 32, tv * 32, 32, 32));
-		
 		
 		stats.atk = atk;
 		stats.def = def;
 		stats.speed = speed;
 		stats.iq = iq;
-		stats.krit = 1.0f;
+		stats.krit = krit;
 
 
 		if (atk > 50 && atk <= 99) { itemName.setFillColor(sf::Color::Blue); }
@@ -76,7 +64,7 @@
 		else if (atk <= 50) { itemName.setFillColor(sf::Color(30, 255, 0)); }
 
 		//hier noch eine speziell funktion die den string formatier für die anzeige
-		if (id <= 9) { type = EquipType::Sword; itemName.setString("Erwachte Klinge"); itemDescription.setString(get_description_string("Schwert", stats.atk, stats.def, stats.speed, stats.iq)); }
+		if (id <= 9) { type = EquipType::Weapon; itemName.setString("Erwachte Klinge"); itemDescription.setString(get_description_string("Schwert", stats.atk, stats.def, stats.speed, stats.iq)); }
 		else if (id > 9 && id <= 19) { type = EquipType::Shield; itemName.setString("Helden Schild"); itemDescription.setString(get_description_string("Nebenhand", stats.atk, stats.def, stats.speed, stats.iq)); }
 		else if (id > 19 && id <= 29) { type = EquipType::Amulet; itemName.setString("Kaiseramulett"); itemDescription.setString(get_description_string("Schmuck", stats.atk, stats.def, stats.speed, stats.iq)); }
 		else if (id > 29 && id <= 39) { type = EquipType::Ring1; itemName.setString("Ring der Schatten"); itemDescription.setString(get_description_string("Finger", stats.atk, stats.def, stats.speed, stats.iq)); }
@@ -85,11 +73,7 @@
 		else if (id > 59 && id <= 69) { type = EquipType::Boots; itemName.setString("Hasenstiefel"); itemDescription.setString(get_description_string("Füße", stats.atk, stats.def, stats.speed, stats.iq)); }
 		else { printf("achtung nichts erstellt!!!!!\n"); }
 
-
-
 		
-
-
 
 	}
 
@@ -104,22 +88,14 @@
 	{
 	}
 
-	void Item::update(sf::Time elapsed, sf::Vector2f target, sf::Vector2i mousepos)
+	void Item::update(sf::Time elapsed, sf::FloatRect player,  sf::Vector2i mousepos)
 	{
-
+	
 		if (havetarget)
 		{
-			velocity = getVelocityToTarget(target, elapsed);
+			setVelocityToTarget(sf::Vector2f(player.left, player.top));
 
-			if (itemSprite.getGlobalBounds().contains(target))
-			{
-				destroy();
-			}
-
-			
 		}
-
-
 
 
 		if (itemSprite.getGlobalBounds().contains(sf::Vector2f(mousepos)))
@@ -206,7 +182,7 @@
 
 	}
 
-	sf::Vector2f Item::getVelocityToTarget(const sf::Vector2f & targetPos, sf::Time & elapsed)
+	sf::Vector2f Item::getVelocityToTarget(const sf::Vector2f & targetPos)
 	{
 
 		sf::Vector2f itempos = rect.getPosition();
@@ -224,6 +200,9 @@
 
 		return velocity;
 	}
+
+
+
 
 	bool Item::sprIsHovered(sf::Vector2i const mousepos)
 	{
@@ -258,14 +237,83 @@
 		itemDescription.setPosition(sf::Vector2f(pos.x + textboxoffset, pos.y+32));
 	}
 
+	void Item::setVelocity(sf::Vector2f velo)
+	{
+		velocity = velo;
+	}
+
+	void Item::setVelocityToTarget(sf::Vector2f Targetpos)
+	{
+		velocity = getVelocityToTarget(Targetpos);
+	}
+
 	sf::Sprite & Item::getSprite()
 	{
 		return itemSprite;
 	}
 
-	Stats & Item::getStats()
+	const Stats & Item::getStats()
 	{
 		return stats;
+	
+	}
+
+	
+	void Item::setItemRarity(const char * weaponrarity)
+	{
+		if (weaponrarity == "green")
+		{
+			rarity = Rarity::GREEN;
+
+		}
+		else if (weaponrarity == "blue")
+		{
+			rarity = Rarity::BLUE;
+		}
+		else if (weaponrarity == "purple")
+		{
+			rarity = Rarity::PURPLE;
+		}
+		else
+		{
+			rarity = Rarity::GREY;
+		}
+	}
+
+	void Item::setWeaponType(const char * weapontype)
+	{
+
+			if (weapontype == "Weapon")
+			{
+				type = EquipType::Weapon;
+
+			}
+			else if (weapontype == "Shield")
+			{
+				type = EquipType::Shield;
+			}
+			else if (weapontype == "Head")
+			{
+				type = EquipType::Head;
+			}
+			else if (weapontype == "Boots")
+			{
+				type = EquipType::Boots;
+			}
+			else if (weapontype == "Amulet")
+			{
+				type = EquipType::Amulet;
+			}
+			else if (weapontype == "Ring")
+			{
+				type = EquipType::Ring1;
+			}
+			else if (weapontype == "Chest")
+			{
+				type = EquipType::Chest;
+			}
+
+		
 	}
 
 	void Item::turnofftarget()
@@ -284,6 +332,19 @@
 	{
 		rect.setSize(sf::Vector2f(50, 50));
 		showdescription = false;
+	}
+
+	
+	void Item::setID(int ID)
+	{
+		int tilecount = ID;
+		id = ID;
+		int tv, tu;
+
+		tu = (tilecount % (320 / 32));
+		tv = (tilecount / (320 / 32));
+	
+		itemSprite.setTextureRect(sf::IntRect(tu * 32, tv * 32, 32, 32));
 	}
 
 	std::string Item::getItemasString()
@@ -319,6 +380,22 @@
 		return vstats;
 	}
 
+	//templates
+
+	/*
+	template<>
+	const char* Item::getName<const char*>()
+	{
+		return itemName.getString().toAnsiString().c_str();
+	}
+
+	template <>
+	std::string Item::getName<std::string>()
+	{
+		return itemName.getString();
+	}
+
+	*/
 	/*
 	savefile
 	int itemcount

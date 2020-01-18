@@ -3,6 +3,18 @@
 
 
 
+void Entity::setPositionAgainstPlayer(sf::Vector2f playerpos)
+{
+	if (playerpos.y+20 > movementComponent->getPosition().y)
+	{
+		behindplayer = true;
+	}
+	else
+	{
+		behindplayer = false;
+	}
+}
+
 Entity::Entity()
 {
 	life = true;
@@ -12,6 +24,11 @@ Entity::Entity()
 
 Entity::~Entity()
 {
+}
+
+void Entity::setName(std::string name)
+{
+	this->name = name;
 }
 
 

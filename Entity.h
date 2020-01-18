@@ -18,17 +18,27 @@ protected:
 	Entity *ptrTargetEntity = nullptr;
 	bool life;
 	bool attacking;
+	bool behindplayer;
 
 	std::string name;
 	
 	unsigned int direction;
 
 public:
+	void setbehindplayer() { behindplayer = true; }
+	void setinfrontplayer() { behindplayer = false; }
+	bool isbehindplayer() { return behindplayer; }
+
+	void setPositionAgainstPlayer(sf::Vector2f playerpos);
+
 	bool canDrop = true;
 	int id = 0;
-
+	std::string &getname() { return name; }
 	Entity();
 	virtual ~Entity();
+
+	void setName(std::string name);
+
 	bool havetarget = false;
 	std::shared_ptr<MovementComponent> movementComponent;
 	AsternGetuned *ptrAstern = nullptr;

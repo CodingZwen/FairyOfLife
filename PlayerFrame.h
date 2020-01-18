@@ -11,7 +11,6 @@ class PlayerFrame
 	float hpsize;
 	float manasize;
 
-
 	sf::Sprite sprPlayerframe;
 	sf::Text txtHp;
 	sf::Text txtMana;
@@ -19,12 +18,10 @@ class PlayerFrame
 
 	std::string levelstring;
 
-
 	sf::RectangleShape _ausdauer;
 	sf::ConvexShape _hp; //parallelogram
 	sf::ConvexShape _mana;//parallelogram
 	sf::VertexArray xp; // 10-eck
-
 
 public:
 	PlayerFrame();

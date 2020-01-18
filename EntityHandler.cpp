@@ -106,26 +106,18 @@ void EntityHandler::PopButterfly(int xpos, int ypos)
 
 void EntityHandler::PopAlotOfButterflys(sf::Vector2f screenDimension)
 {
-	int randomx=0;
-	int randomy=0;
+	int randomx = 0;
+	int randomy = 0;
 
 	for (int i = 0; i < 1800; i++) {
-		
+
 
 		randomx = rand() % (int)screenDimension.x + 100;
 		randomy = rand() % (int)screenDimension.y + 70;
-		
-		if(i%2)	PopButterfly(randomx, randomy);
+
+		if (i % 2)	PopButterfly(randomx, randomy);
 		else 	PopCat(randomx, randomy);
 
-		randomx = rand() % (int)screenDimension.x + 100;
-		randomy = rand() % (int)screenDimension.y + 70;
-		
-		PopRaven(randomx, randomy);
-
-		//randomx = rand() % (int)screenDimension.x + 100;
-		//randomy = rand() % (int)screenDimension.y + 70;
-		//PopCat(randomx, randomy);
 
 	}
 
@@ -135,9 +127,10 @@ void EntityHandler::PopAlotOfButterflys(sf::Vector2f screenDimension)
 
 	//		PopCat(500, 700);
 
-	//	
+	//
 
 	//}
+
 
 
 }
@@ -214,12 +207,13 @@ void EntityHandler::update(Items & items, sf::Time _elapsed, sf::Vector2f const 
 	wp->update_offset(ptr_player->returnplayer_direction());
 
 
-	for (auto i = entities.begin(); i != entities.end(); ) {
+	for (auto &i = entities.begin(); i != entities.end(); ) {
 
 		Entity *e = *i;
 	
 		//nocj überarbeiten
 		e->update(_elapsed, playerpos);
+		e->setPositionAgainstPlayer(ptr_player->getPosition());
 		//e->anim.update(_elapsed);
 	
 	
@@ -270,7 +264,7 @@ void EntityHandler::collide(sf::Time elapsed)
 {
 	//Entity::Manage_Collide(entities);
 
-	for (auto a : entities) {
+	for (auto &a : entities) {
 
 		if (a->movementComponent)
 		if (ptr_player->movementComponent->getGlobalBounds().intersects(a->movementComponent->getGlobalBounds()) &&( a->id == 3 || a->id == 33 || a->id == 1)&& a->is_attacking()) {
@@ -278,8 +272,8 @@ void EntityHandler::collide(sf::Time elapsed)
 		
 			ptr_player->hurt(a->attributs.getdmg());
 			ptr_texthandler->popDmg(a->attributs.getdmg(), ptr_player->getPosition(),0);
-			
-
+		
+		
 		}
 
 		if ((a->id == 1 || a->id == 3 || a->id == 33))
@@ -376,10 +370,37 @@ void EntityHandler::collide(sf::Time elapsed)
 }
 
 
+void EntityHandler::drawbehindplayer(sf::RenderWindow & window)
+{
+	for (auto &i : entities)
+	{
+		if (i->isbehindplayer())
+		{
+			i->draw(window);
+		}
+	}
 
+}
+
+void EntityHandler::drawinfrontplayer(sf::RenderWindow & window)
+{
+	for (auto &i : entities)
+	{
+		if (!i->isbehindplayer())
+		{
+			i->draw(window);
+		}
+	}
+
+
+}
+
+
+
+//draw alll
 void EntityHandler::draw(sf::RenderWindow & window)
 {
-	for (auto i : entities) i->draw(window);
+	for (auto &i : entities) i->draw(window);
 
 
 	//sf::RectangleShape shape;
@@ -517,6 +538,39 @@ treespawnsound.play();
 v1 = rand() % 100;         // v1 in the range 0 to 99
 v2 = rand() % 100 + 1;     // v2 in the range 1 to 100
 v3 = rand() % 30 + 1985;   // v3 in the range 1985-2014
+
+int randomx=0;
+	int randomy=0;
+
+	for (int i = 0; i < 1800; i++) {
+
+
+		randomx = rand() % (int)screenDimension.x + 100;
+		randomy = rand() % (int)screenDimension.y + 70;
+
+		if(i%2)	PopButterfly(randomx, randomy);
+		else 	PopCat(randomx, randomy);
+
+		randomx = rand() % (int)screenDimension.x + 100;
+		randomy = rand() % (int)screenDimension.y + 70;
+
+		PopRaven(randomx, randomy);
+
+		//randomx = rand() % (int)screenDimension.x + 100;
+		//randomy = rand() % (int)screenDimension.y + 70;
+		//PopCat(randomx, randomy);
+
+	}
+
+
+	//for (int i = 0; i < 100; i++) {
+
+
+	//		PopCat(500, 700);
+
+	//
+
+	//}
 
 
 

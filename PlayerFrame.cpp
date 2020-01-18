@@ -86,7 +86,7 @@ void PlayerFrame::initTexts(AssetManager *AM)
 	levelstring = "Lv: 1";
 	lvtxt.setFont(*AM->ptr_GetFont("font"));
 	lvtxt.setPosition(0, 0);
-	lvtxt.setCharacterSize(14);
+	lvtxt.setCharacterSize(10);
 	lvtxt.setFillColor(sf::Color(40, 40, 40));
 	lvtxt.setOutlineColor(sf::Color::White);
 	lvtxt.setOutlineThickness(1);
@@ -95,7 +95,7 @@ void PlayerFrame::initTexts(AssetManager *AM)
 
 	txtHp.setFont(*AM->ptr_GetFont("font"));
 	txtHp.setPosition(0, 0);
-	txtHp.setCharacterSize(12);
+	txtHp.setCharacterSize(10);
 	txtHp.setFillColor(sf::Color(40, 40, 40));
 	txtHp.setOutlineColor(sf::Color::White);
 	txtHp.setOutlineThickness(1);
@@ -103,7 +103,7 @@ void PlayerFrame::initTexts(AssetManager *AM)
 
 	txtMana.setFont(*AM->ptr_GetFont("font"));
 	txtMana.setPosition(0, 0);
-	txtMana.setCharacterSize(12);
+	txtMana.setCharacterSize(10);
 	txtMana.setFillColor(sf::Color(40, 40, 40));
 	txtMana.setOutlineColor(sf::Color::White);
 	txtMana.setOutlineThickness(1);
@@ -139,7 +139,7 @@ void PlayerFrame::update(sf::Vector2f const & _viewPos, sf::Time elapsed, Player
 	lvtxt.setPosition(_viewPos.x - 470, _viewPos.y - 260);
 
 	txtHp.setPosition(_viewPos.x - 392, _viewPos.y - 271);
-	txtMana.setPosition(_viewPos.x - 392, _viewPos.y - 251);
+	txtMana.setPosition(_viewPos.x - 392, _viewPos.y - 250);
 
 	updateBars(player);
 

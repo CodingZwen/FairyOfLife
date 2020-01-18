@@ -120,7 +120,8 @@ void Game::ChangeState(Instanzen inst)
 	case  Instanzen::Startmenue:
 		current_state = std::move(std::unique_ptr<Hauptmenu>(new Hauptmenu(sf::Vector2i(window.getSize().x, window.getSize().y)))); break;
 	case Instanzen::Start_Game:
-		current_state = std::move(std::unique_ptr<Main_Game>(new Main_Game(sf::Vector2i(window.getSize().x, window.getSize().y)))); break;
+		current_state = std::move
+		(std::unique_ptr<Main_Game>(new Main_Game(sf::Vector2i(window.getSize().x, window.getSize().y),*this))); break;
 	case Instanzen::Options:
 		break;
 
@@ -129,5 +130,19 @@ void Game::ChangeState(Instanzen inst)
 
 
 	//system("pause");
+
+}
+
+void Game::Screenshot()
+{
+	sf::Texture tex;
+
+	tex.create(window.getSize().x, window.getSize().y);
+	tex.update(window);
+
+	if (tex.copyToImage().saveToFile("screenshot1.jpg"))
+	{
+		printf("erster screenshot:d");
+	}
 
 }

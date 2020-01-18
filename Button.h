@@ -26,6 +26,9 @@ class Button
 	sf::Color hoverColor;
 	sf::Color activeColor;
 
+	sf::Vector2f viewCenterpos;
+	sf::Vector2f offsetviewCenter;
+
 public:
 	Button(float x, float y, float width, float height, sf::Font *font, std::string text, sf::Color idleColor, sf::Color hoverColor, sf::Color actoveColor);
 	~Button();
@@ -33,6 +36,8 @@ public:
 	const bool isPressed() const;
  	void update(const sf::Vector2f mousepos);
 	void render(sf::RenderTarget* target);
+	void setPosition(sf::Vector2f newpos);
+	void updatePosition(sf::Vector2f viewcenter);
 
 };
 

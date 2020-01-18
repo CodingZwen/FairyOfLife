@@ -1,6 +1,7 @@
 #pragma once
 
 
+
 class Game;
 
 //jweiliger spielstatus: Hauptmenue, Pause , Spiel , Optionen

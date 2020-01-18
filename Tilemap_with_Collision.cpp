@@ -6,34 +6,30 @@ Tilemap_with_Collision::Tilemap_with_Collision(Map & map)
 {
 	
 	ptrCurrentMap = &map;
-	m_tilesize = 32;
 	load_from_map();
 	InitShaderShit();
+
+
 	
 }
 
 Tilemap_with_Collision::Tilemap_with_Collision()
 {
-	m_tilesize = 32;
-	animationcount = 0;
+	
 
 }
 
 
-
 Tilemap_with_Collision::~Tilemap_with_Collision()
 {
-	//brauch ich nicht da der pointer auf den speicherbereich von
-	//map zeigt und der wird intern von map gelöscht
-	//wenn ich hier ptr auch lösche, dann double free
-	//if (ptr_binary_map_array != NULL)delete[] ptr_binary_map_array;
-
+	
 }
 
 
 void Tilemap_with_Collision::draw_layer1(sf::RenderWindow & target)
 {
 	float f = 0;
+	sf::View view = target.getView();
 	watershader->setUniform("time", timer.getElapsedTime().asSeconds());
 	watershader->setUniform("level", f);
 
@@ -43,15 +39,15 @@ void Tilemap_with_Collision::draw_layer1(sf::RenderWindow & target)
 	target.draw(VAWater, states);
 
 	target.draw(Vertexmap1, ptrCurrentMap->get_texture());
-
-
+		
 
 }
 
 void Tilemap_with_Collision::draw_layer2(sf::RenderWindow & target)
 {
-	target.draw(Vertexmap2, ptrCurrentMap->get_texture());
 
+	target.draw(Vertexmap2, ptrCurrentMap->get_texture());
+	
 }
 
 void Tilemap_with_Collision::draw_VertexMap(sf::RenderWindow & target)
@@ -164,21 +160,15 @@ bool Tilemap_with_Collision::load_from_map()
 			quad[3].texCoords = sf::Vector2f(tu * tileSize, (tv + 1) * tileSize);
 
 
-
-
-
 		}
+	
 		
 	return true;
 
 }
 
 
-void Tilemap_with_Collision::setBlack()
-{
-	alpha = 20;
-	updateAlpha();
-}
+
 
 void Tilemap_with_Collision::updateAlpha()
 {
@@ -213,13 +203,9 @@ void Tilemap_with_Collision::set_map(Map  &  map)
 {
 
 	ptrCurrentMap = &map;
-//	m_tileset_sprite.setTexture(*ptrCurrentMap->get_texture());
 	load_from_map();
 	
 }
-
-
-
 
 bool Tilemap_with_Collision::collide_engine(sf::Vector2f const & objectpos,sf::Vector2f offset,unsigned int tileSize)
 {
@@ -235,15 +221,10 @@ bool Tilemap_with_Collision::collide_engine(sf::Vector2f const & objectpos,sf::V
 				//25 , 32 oder sowas
 bool Tilemap_with_Collision::fieldIsValid(int x, int y)
 {
-
 	y *= ptrCurrentMap->get_width(); //feldbreite	
 
 	//printf("zurückgegebenes feld: %d ::\n", x + y);
-
 	return !returncoll_binary(x+y);
-
-
-
 	
 }
 
@@ -262,6 +243,11 @@ unsigned int Tilemap_with_Collision::current_field(sf::Vector2f const & coords)
 }
 
 
+void Tilemap_with_Collision::setBlack()
+{
+	alpha = 20;
+	updateAlpha();
+}
 
 void Tilemap_with_Collision::InitShaderShit()
 {
@@ -301,6 +287,38 @@ void Tilemap_with_Collision::inkrementLight()
 		alpha++;
 		updateAlpha();
 	}
+}
+
+sf::Sprite Tilemap_with_Collision::getMinimap()
+{
+
+	minimap.draw(Vertexmap1, ptrCurrentMap->get_texture());
+	minimap.draw(Vertexmap2, ptrCurrentMap->get_texture());
+	minimap.display();
+
+	return sf::Sprite(minimap.getTexture());
+	
+}
+
+sf::CircleShape Tilemap_with_Collision::getMiniMapasCircle()
+{
+
+
+	minimap.draw(Vertexmap1, ptrCurrentMap->get_texture());
+	minimap.draw(Vertexmap2, ptrCurrentMap->get_texture());
+	minimap.display();
+	minimapCircle.setTexture(&minimap.getTexture());
+	return minimapCircle;
+
+}
+
+void Tilemap_with_Collision::initMiniMap()
+{
+	minimap.create(ptrCurrentMap->get_width()*32, ptrCurrentMap->get_height()*32);
+	minimapCircle.setRadius(288);
+	minimapCircle.setOutlineThickness(12);
+	minimapCircle.setOutlineColor(sf::Color(168,141,50));
+
 }
 
 
